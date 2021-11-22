@@ -66,7 +66,7 @@ class ModelHandler {
                     res.status(200);
                 }
                 
-                res.send(res.transform(rows));
+                res.send({rows: res.transform(rows), total: count});
             }
         };
         
