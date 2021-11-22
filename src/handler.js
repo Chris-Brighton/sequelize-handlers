@@ -80,14 +80,15 @@ class ModelHandler {
 
   update() {
     const handle = (req, res, next) => {
-      this.findOne(req.params).then(updateAttributes).then(respond).catch(next);
+      const model = this.model;
+      model
+        .update(req.body, { where: req.params })
+        .then(find)
+        .then(respond)
+        .catch(next);
 
-      function updateAttributes(row) {
-        if (!row) {
-          throw new HttpStatusError(404, "Not Found");
-        }
-
-        return row.update(req.body);
+      function find() {
+        return model.findByPk(req.params.id);
       }
 
       function respond(row) {
