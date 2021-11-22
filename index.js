@@ -1,5 +1,7 @@
-const ModelHandler = require('./src/handler');
+const ModelHandler = require('./src/handler')
+const { parse } = require('./src/parser')
 
 module.exports = {
-    ModelHandler
-};
+  ModelHandler,
+  parse,
+}
