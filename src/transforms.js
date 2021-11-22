@@ -1,17 +1,17 @@
-const _ = require('lodash');
+const _ = require('lodash')
 
 module.exports = {
-    raw
-};
+  raw,
+}
 
 function raw(req, res, next) {
-    if (!_.isFunction(res.transform)) {
-        res.transform = transform;
-    }
-    
-    next();
-    
-    function transform(data) {
-        return data;
-    }
+  if (!_.isFunction(res.transform)) {
+    res.transform = transform
+  }
+
+  next()
+
+  function transform(data) {
+    return data
+  }
 }

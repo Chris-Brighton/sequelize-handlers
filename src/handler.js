@@ -1,122 +1,122 @@
-const _ = require("lodash");
-const { HttpStatusError } = require("./errors");
-const { parse } = require("./parser");
-const { raw } = require("./transforms");
+const _ = require('lodash')
+const { HttpStatusError } = require('./errors')
+const { parse } = require('./parser')
+const { raw } = require('./transforms')
 
 class ModelHandler {
   constructor(model, defaults = { limit: 50, offset: 0 }) {
-    this.model = model;
-    this.defaults = defaults;
+    this.model = model
+    this.defaults = defaults
   }
 
   create() {
     const handle = (req, res, next) => {
-      this.model.create(req.body).then(respond).catch(next);
+      this.model.create(req.body).then(respond).catch(next)
 
       function respond(row) {
-        res.status(201);
-        res.send(res.transform(row));
+        res.status(201)
+        res.send(res.transform(row))
       }
-    };
+    }
 
-    return [raw, handle];
+    return [raw, handle]
   }
 
   get() {
     const handle = (req, res, next) => {
-      this.findOne(req.params, req.options).then(respond).catch(next);
+      this.findOne(req.params, req.options).then(respond).catch(next)
 
       function respond(row) {
         if (!row) {
-          throw new HttpStatusError(404, "Not Found");
+          throw new HttpStatusError(404, 'Not Found')
         }
 
-        res.send(res.transform(row));
+        res.send(res.transform(row))
       }
-    };
+    }
 
-    return [raw, handle];
+    return [raw, handle]
   }
 
   query() {
     const handle = (req, res, next) => {
-      this.findAndCountAll(req.query, req.options).then(respond).catch(next);
+      this.findAndCountAll(req.query, req.options).then(respond).catch(next)
 
       function respond({ rows, start, end, count }) {
-        res.set("Content-Range", `${start}-${end}/${count}`);
+        res.set('Content-Range', `${start}-${end}/${count}`)
 
         if (count > end) {
-          res.status(206);
+          res.status(206)
         } else {
-          res.status(200);
+          res.status(200)
         }
 
-        res.send({ rows: res.transform(rows), total: count });
+        res.send({ rows: res.transform(rows), total: count })
       }
-    };
+    }
 
-    return [raw, handle];
+    return [raw, handle]
   }
 
   remove() {
     const handle = (req, res, next) => {
-      const model = this.model;
-      const options = _.merge(parse(req.params, model), req.options);
-      model.findOne(options).then(destroy).then(respond).catch(next);
+      const model = this.model
+      const options = _.merge(parse(req.params, model), req.options)
+      model.findOne(options).then(destroy).then(respond).catch(next)
 
       function destroy(row) {
         if (!row) {
-          throw new HttpStatusError(404, "Not Found");
+          throw new HttpStatusError(404, 'Not Found')
         }
-        return model.destroy(options);
+        return model.destroy(options)
       }
 
       function respond() {
-        res.sendStatus(204);
+        res.sendStatus(204)
       }
-    };
+    }
 
-    return [handle];
+    return [handle]
   }
 
   update() {
     const handle = (req, res, next) => {
-      const model = this.model;
-      const options = _.merge(parse(req.params, model), req.options);
-      model.update(req.body, options).then(find).then(respond).catch(next);
+      const model = this.model
+      const options = _.merge(parse(req.params, model), req.options)
+      model.update(req.body, options).then(find).then(respond).catch(next)
 
       function find() {
-        return model.findOne(options);
+        return model.findOne(options)
       }
 
       function respond(row) {
-        res.send(res.transform(row));
+        res.send(res.transform(row))
       }
-    };
+    }
 
-    return [raw, handle];
+    return [raw, handle]
   }
 
   findOne(params, options) {
-    options = _.merge(parse(params, this.model), options);
+    options = _.merge(parse(params, this.model), options)
 
-    return this.model.findOne(options);
+    return this.model.findOne(options)
   }
 
   findAndCountAll(params, options) {
-    let parsed = parse(params, this.model);
+    let parsed = parse(params, this.model)
 
-    options = _(parsed).defaults(this.defaults).merge(options).value();
+    options = _(parsed).defaults(this.defaults).merge(options).value()
 
-    return this.model.findAndCountAll(options).then(extract);
+    return this.model.findAndCountAll(options).then(extract)
 
     function extract({ count, rows }) {
-      const start = options.offset;
-      const end = Math.min(count, options.offset + options.limit);
+      const start = options.offset
+      const end = Math.min(count, options.offset + options.limit)
 
-      return { rows, start, end, count };
+      return { rows, start, end, count }
     }
   }
 }
 
-module.exports = ModelHandler;
+module.exports = ModelHandler

@@ -35,7 +35,11 @@
     "mocha": "^5.2.0",
     "nyc": "^13.0.1",
     "sequelize": "^4.38.0",
-    "sqlite3": "^4.0.2",
-    "supertest": "^3.1.0"
+    "supertest": "^3.1.0",
+    "@babel/eslint-parser": "^7.14.7",
+    "eslint": "^7.29.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.3.2",
+    "sqlite3": "^5.0.2"
   }
 }
