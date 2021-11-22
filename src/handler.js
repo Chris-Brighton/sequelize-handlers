@@ -60,14 +60,15 @@ class ModelHandler {
 
   remove() {
     const handle = (req, res, next) => {
-      this.findOne(req.params).then(destroy).then(respond).catch(next);
+      const model = this.model;
+      const options = _.merge(parse(req.params, model), req.options);
+      model.findOne(options).then(destroy).then(respond).catch(next);
 
       function destroy(row) {
         if (!row) {
           throw new HttpStatusError(404, "Not Found");
         }
-
-        return row.destroy();
+        return model.destroy(options);
       }
 
       function respond() {
