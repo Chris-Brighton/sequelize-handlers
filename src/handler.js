@@ -81,14 +81,11 @@ class ModelHandler {
   update() {
     const handle = (req, res, next) => {
       const model = this.model;
-      model
-        .update(req.body, { where: req.params })
-        .then(find)
-        .then(respond)
-        .catch(next);
+      const options = _.merge(parse(req.params, model), req.options);
+      model.update(req.body, options).then(find).then(respond).catch(next);
 
       function find() {
-        return model.findByPk(req.params.id);
+        return model.findOne(options);
       }
 
       function respond(row) {
