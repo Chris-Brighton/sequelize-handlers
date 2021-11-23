@@ -14,7 +14,7 @@ class ModelHandler {
       this.model.create(req.body).then(respond).catch(next)
 
       function respond(row) {
-        res.status(201)
+        res.status(200)
         res.send(res.transform(row))
       }
     }
@@ -30,7 +30,7 @@ class ModelHandler {
         if (!row) {
           throw new HttpStatusError(404, 'Not Found')
         }
-
+        res.status(200)
         res.send(res.transform(row))
       }
     }
@@ -44,13 +44,7 @@ class ModelHandler {
 
       function respond({ rows, start, end, count }) {
         res.set('Content-Range', `${start}-${end}/${count}`)
-
-        if (count > end) {
-          res.status(206)
-        } else {
-          res.status(200)
-        }
-
+        res.status(200)
         res.send({ rows: res.transform(rows), total: count })
       }
     }
@@ -72,7 +66,7 @@ class ModelHandler {
       }
 
       function respond() {
-        res.sendStatus(204)
+        res.sendStatus(200)
       }
     }
 
@@ -90,6 +84,7 @@ class ModelHandler {
       }
 
       function respond(row) {
+        res.status(200)
         res.send(res.transform(row))
       }
     }
