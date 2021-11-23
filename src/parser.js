@@ -13,12 +13,12 @@ function parse(params, { rawAttributes }) {
     where: {},
   }
 
-  const keywords = ['fields', 'limit', 'offset', 'sort']
+  const keywords = ['$fields', '$limit', '$offset', '$sort']
 
-  options.attributes = parseString(params.fields)
-  options.limit = parseInteger(params.limit)
-  options.offset = parseInteger(params.offset)
-  options.order = parseSort(params.sort)
+  options.attributes = parseString(params.$fields)
+  options.limit = parseInteger(params.$limit)
+  options.offset = parseInteger(params.$offset)
+  options.order = parseSort(params.$sort)
 
   _(params)
     .omit(keywords)

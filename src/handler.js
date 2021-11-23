@@ -24,7 +24,7 @@ class ModelHandler {
 
   get() {
     const handle = (req, res, next) => {
-      this.findOne(req.params, req.options).then(respond).catch(next)
+      this._findOne(req.params, req.options).then(respond).catch(next)
 
       function respond(row) {
         if (!row) {
@@ -40,7 +40,7 @@ class ModelHandler {
 
   query() {
     const handle = (req, res, next) => {
-      this.findAndCountAll(req.query, req.options).then(respond).catch(next)
+      this._findAndCountAll(req.query, req.options).then(respond).catch(next)
 
       function respond({ rows, start, end, count }) {
         res.set('Content-Range', `${start}-${end}/${count}`)
@@ -97,13 +97,25 @@ class ModelHandler {
     return [raw, handle]
   }
 
-  findOne(params, options) {
+  /**
+   * @private
+   * @param {Object} params req.params
+   * @param {Object} options req.options
+   * @returns {Object} database record
+   */
+  _findOne(params, options) {
     options = _.merge(parse(params, this.model), options)
 
     return this.model.findOne(options)
   }
 
-  findAndCountAll(params, options) {
+  /**
+   * @private
+   * @param {Object} params req.params
+   * @param {Object} options req.options
+   * @returns {Object} database records and total
+   */
+  _findAndCountAll(params, options) {
     let parsed = parse(params, this.model)
 
     options = _(parsed).defaults(this.defaults).merge(options).value()
