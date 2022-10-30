@@ -15,10 +15,12 @@ function parse(params, { rawAttributes }) {
 
   const keywords = ['$fields', '$limit', '$offset', '$sort']
 
-  options.attributes = parseString(params.$fields)
-  options.limit = parseInteger(params.$limit)
-  options.offset = parseInteger(params.$offset)
-  options.order = parseSort(params.$sort)
+  const { $fields, $limit, $offset, $sort } = params
+
+  if ($fields) options.attributes = parseString(params.$fields)
+  if ($limit) options.limit = parseInteger(params.$limit)
+  if ($offset) options.offset = parseInteger(params.$offset)
+  if ($sort) options.order = parseSort(params.$sort)
 
   _(params)
     .omit(keywords)
@@ -63,11 +65,10 @@ function parseSort(value) {
   let sort = undefined
 
   if (value) {
-    const keys = parseString(value)
-
-    sort = _.map(keys, (key) => {
-      if (key.indexOf('-') === 0) {
-        return [key.substr(1), 'DESC']
+    const jSort = parseJson(value)
+    sort = _.map(jSort, (value, key) => {
+      if (value === -1) {
+        return [key, 'DESC']
       } else {
         return [key, 'ASC']
       }
