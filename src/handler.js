@@ -10,8 +10,8 @@ class ModelHandler {
   }
 
   create() {
-    const handle = (req, res) => {
-      this.model.create(req.body).then(respond).catch(error)
+    const handle = (req, res, next) => {
+      this.model.create(req.body).then(respond).catch(next)
 
       function respond(row) {
         res.status(200)
