@@ -62,18 +62,15 @@ function parseInteger(value) {
 }
 
 function parseSort(value) {
-  let sort = undefined
-
+  let sort = []
   if (value) {
     const jSort = parseJson(value)
-    sort = _.map(jSort, (value, key) => {
-      if (value === -1) {
-        return [key, 'DESC']
-      } else {
-        return [key, 'ASC']
-      }
+    console.log('json sort', jSort)
+    Object.keys(jSort).forEach((key) => {
+      if (jSort[key] === -1) sort.push([key, 'DESC'])
+      else sort.push([key, 'ASC'])
     })
   }
-
+  console.log('finished sort', sort)
   return sort
 }
