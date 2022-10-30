@@ -65,12 +65,12 @@ function parseSort(value) {
   let sort = []
   if (value) {
     const jSort = parseJson(value)
-    console.log('json sort', jSort)
-    Object.keys(jSort).forEach((key) => {
-      if (jSort[key] === -1) sort.push([key, 'DESC'])
-      else sort.push([key, 'ASC'])
-    })
+    if (typeof jSort !== 'string') {
+      Object.keys(jSort).forEach((key) => {
+        if (jSort[key] === -1) sort.push([key, 'DESC'])
+        else sort.push([key, 'ASC'])
+      })
+    }
   }
-  console.log('finished sort', sort)
   return sort
 }
