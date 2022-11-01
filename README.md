@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 ## Install
 
 ```console
-$ npm install sequelize-handlers
+$ npm install https://github.com/Chris-Brighton/sequelize-handlers.git
 ```
 
 ## Usage
@@ -112,7 +112,7 @@ parameter accepts a comma-separated list.
 A call returning only `id` and `name` for a result set would look like this.
 
 ```
-GET /hammers?fields=id,name
+GET /hammers?$fields=id,name
 ```
 
 #### Filtering
@@ -152,7 +152,7 @@ is ascending. Fields can be sorted in descending order by prefixing them with a 
 A call sorting a result by `id` ascending and then `name` descending would look like this.
 
 ```
-GET /hammers?sort=id,-name
+GET /hammers?$sort={"createdOn": -1, "updatedOn": 1}
 ```
 
 #### Offset and Limit
@@ -170,7 +170,7 @@ When neither of these parameters are explicitly supplied the handler will assume
 A call with a result set starting at `5` and returning no more than `25` records would look like this.
 
 ```
-GET /hammers?offset=5&limit=25
+GET /hammers?$offset=5&$limit=25
 ```
 
 If there were `50` records in total, the returned `Content-Range` header would look like 
